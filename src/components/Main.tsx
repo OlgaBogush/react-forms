@@ -1,6 +1,9 @@
 import { useState } from 'react';
 
 import { Modal } from './Modal';
+import { REACT_HOOK_FORM, UNCONTROL_FORM } from '../utils/constants';
+import { UncontrolledForm } from './forms/UncontrolledForm';
+import { ReactHookForm } from './forms/ReactHookForm';
 
 export const Main = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -31,7 +34,12 @@ export const Main = () => {
           React Hook Form
         </button>
       </div>
-      {isOpen && <Modal onClose={handleCloseModal} activeForm={activeForm} />}
+      {isOpen && (
+        <Modal onClose={handleCloseModal}>
+          {activeForm === UNCONTROL_FORM && <UncontrolledForm />}
+          {activeForm === REACT_HOOK_FORM && <ReactHookForm />}
+        </Modal>
+      )}
     </div>
   );
 };

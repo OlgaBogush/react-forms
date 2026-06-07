@@ -1,16 +1,12 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-
-import { ReactHookForm } from './forms/ReactHookForm';
-import { UncontrolledForm } from './forms/UncontrolledForm';
-import { REACT_HOOK_FORM, UNCONTROL_FORM } from '../utils/constants';
 
 interface ModalProps {
   onClose: () => void;
-  activeForm: string | undefined;
+  children: React.ReactNode;
 }
 
-export const Modal = ({ onClose, activeForm }: ModalProps) => {
+export const Modal = ({ onClose, children }: ModalProps) => {
   const portalModalRoot = document.getElementById(
     'portal-modal-root'
   ) as HTMLElement;
@@ -47,8 +43,7 @@ export const Modal = ({ onClose, activeForm }: ModalProps) => {
         >
           x
         </button>
-        {activeForm === REACT_HOOK_FORM && <ReactHookForm />}
-        {activeForm === UNCONTROL_FORM && <UncontrolledForm />}
+        {children}
       </div>
     </div>,
     portalModalRoot
