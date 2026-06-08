@@ -7,7 +7,7 @@ interface UserCardProps {
 export const UserCard = ({ user }: UserCardProps) => {
   const { name, age, email } = user;
   return (
-    <div className="flex flex-col p-1 bg-gray-100 rounded shadow">
+    <div className="flex flex-col p-1 bg-white rounded shadow">
       <p className="text-sm">
         <span className="text-xs text-gray-700 italic mr-1">name:</span>
         {name}

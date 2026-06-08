@@ -135,23 +135,23 @@ export const UncontrolledForm = ({
                   className="mr-1"
                   type="radio"
                   name="gender"
-                  id="mail"
-                  value="mail"
+                  id="male"
+                  value="male"
                   defaultChecked
                   required
                 />
-                <label htmlFor="mail">Mail</label>
+                <label htmlFor="male">Male</label>
               </div>
               <div className="flex justify-center items-center">
                 <input
                   className="mr-1"
                   type="radio"
                   name="gender"
-                  id="femail"
-                  value="femail"
+                  id="female"
+                  value="female"
                   required
                 />
-                <label htmlFor="femail">Femail</label>
+                <label htmlFor="female">Female</label>
               </div>
 
               <div className="flex justify-center items-center">
