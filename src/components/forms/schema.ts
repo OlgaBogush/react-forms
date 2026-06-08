@@ -36,7 +36,20 @@ export const schema = yup.object({
     }),
 
   gender: yup.string().required('Required field'),
-  country: yup.string().required('Required field'),
+
+  country: yup
+    .string()
+    .required('Select your country')
+    .test(
+      'check country',
+      'Select your country from the list',
+      function (value) {
+        const { countries } = this.options.context as { countries?: string[] };
+        if (!countries) return false;
+        return countries.includes(value);
+      }
+    ),
+
   file: yup.string(),
 
   password: yup
@@ -52,7 +65,7 @@ export const schema = yup.object({
 
   confirmPassword: yup
     .string()
-    .required('Confirm Your Password')
+    .required('Confirm your password')
     .oneOf([yup.ref('password')], 'The password does not match'),
 
   terms: yup

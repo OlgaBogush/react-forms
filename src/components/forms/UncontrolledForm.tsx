@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import type { IUserData } from '../../types/user';
 import { schema, type User } from './schema';
+import { countriesList } from '../../utils/constants';
 
 export const UncontrolledForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -22,7 +23,10 @@ export const UncontrolledForm = () => {
     };
 
     try {
-      const user: User = await schema.validate(userData, { abortEarly: false });
+      const user: User = await schema.validate(userData, {
+        abortEarly: false,
+        context: { countries: countriesList },
+      });
       console.log(user);
     } catch (err) {
       if (ValidationError.isError(err)) {
@@ -157,11 +161,13 @@ export const UncontrolledForm = () => {
               <option value="" disabled>
                 Select Your Country
               </option>
-              <option value="Belarus">Belarus</option>
-              <option value="Germany">Germany</option>
-              <option value="Japan">Japan</option>
-              <option value="China">China</option>
-              <option value="Great Britain">Great Britain</option>
+              {countriesList.map((item) => {
+                return (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
