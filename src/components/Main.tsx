@@ -22,13 +22,13 @@ export const Main = () => {
     <div className="flex-grow w-full p-6 bg-gray-100 rounded shadow">
       <div className="flex gap-6 flex-wrap">
         <button
-          className="min-w-64 bg-cyan-500 text-white p-2 cursor-pointer hover:bg-cyan-400 focus:outline-2 transition-bg duration-200 linear rounded shadow"
+          className="min-w-64 bg-blue-500 text-white p-2 cursor-pointer hover:bg-blue-600 focus:outline-2 transition-bg duration-200 linear rounded shadow"
           onClick={() => handleOpenModal('uncontrol')}
         >
           Uncontrolled Form
         </button>
         <button
-          className="min-w-64 bg-cyan-500 text-white p-2 cursor-pointer hover:bg-cyan-400 focus:outline-2 transition-bg duration-200 linear rounded shadow"
+          className="min-w-64 bg-blue-500 text-white p-2 cursor-pointer hover:bg-blue-600 focus:outline-2 transition-bg duration-200 linear rounded shadow"
           onClick={() => handleOpenModal('control')}
         >
           React Hook Form
