@@ -1,35 +1,41 @@
 import { ValidationError } from 'yup';
-import { useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useAppDispatch } from '../../store/hooks';
 
-import type { IUserData } from '../../types/user';
-import { schema, type User } from './schema';
+import type { HandleCloseModalProps, IUserData } from '../../types/user';
+import { schema } from './schema';
 import { COUNTRIES_LIST } from '../../utils/constants';
 import { getPasswordSymbols } from '../../utils/getPasswordSymbols';
+import { addUserForm } from '../../store/userSlice';
 
-export const UncontrolledForm = () => {
+export const UncontrolledForm = ({
+  handleCloseModal,
+}: HandleCloseModalProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [passwordValue, setPasswordValue] = useState<string>('');
+  const dispatch = useAppDispatch();
 
-  const handleFormAction = async (formData: FormData) => {
-    setErrors({});
+  const handleFormAction = async (data: FormData) => {
     const userData: IUserData = {
-      name: formData.get('name') as string,
-      age: formData.get('age') as string,
-      email: formData.get('email') as string,
-      gender: formData.get('gender') as string,
-      country: formData.get('country') as string,
-      // file: formData.get('file') as File,
-      password: formData.get('password') as string,
-      confirmPassword: formData.get('confirmPassword') as string,
-      terms: formData.has('terms'),
+      name: data.get('name') as string,
+      age: data.get('age') as string,
+      email: data.get('email') as string,
+      gender: data.get('gender') as string,
+      country: data.get('country') as string,
+      // file: data.get('file') as File,
+      password: data.get('password') as string,
+      confirmPassword: data.get('confirmPassword') as string,
+      terms: data.has('terms'),
     };
 
     try {
-      const user: User = await schema.validate(userData, {
+      await schema.validate(userData, {
         abortEarly: false,
         context: { countries: COUNTRIES_LIST },
       });
-      console.log(user);
+      dispatch(addUserForm(userData));
+
+      handleCloseModal();
     } catch (err) {
       if (ValidationError.isError(err)) {
         const objError: Record<string, string> = {};
@@ -45,6 +51,12 @@ export const UncontrolledForm = () => {
     }
   };
 
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    handleFormAction(formData);
+  };
+
   const handlerChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPasswordValue(e.target.value);
   };
@@ -55,7 +67,7 @@ export const UncontrolledForm = () => {
     <form
       className="flex flex-col items-center flex-grow w-full gap-6"
       noValidate
-      action={handleFormAction}
+      onSubmit={handleFormSubmit}
     >
       <h1 className="uppercase">Uncontrolled Form</h1>
       <div className="flex flex-col flex-grow w-full pt-4 pl-4 pr-4 bg-gray-100 rounded shadow">

@@ -9,3 +9,7 @@ export interface IUserData {
   confirmPassword: string;
   terms: boolean;
 }
+
+export interface HandleCloseModalProps {
+  handleCloseModal: () => void;
+}

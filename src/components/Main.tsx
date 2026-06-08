@@ -4,10 +4,16 @@ import { Modal } from './Modal';
 import { REACT_HOOK_FORM, UNCONTROL_FORM } from '../utils/constants';
 import { UncontrolledForm } from './forms/UncontrolledForm';
 import { ReactHookForm } from './forms/ReactHookForm';
+import { useAppSelector } from '../store/hooks';
+import { selectForms } from '../store/userSlice';
+import type { IUserData } from '../types/user';
+import { UserCard } from './UserCard';
 
 export const Main = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeForm, setActiveForm] = useState<string | undefined>(undefined);
+  console.log(isOpen, activeForm);
+  const forms: IUserData[] = useAppSelector(selectForms);
 
   const handleOpenModal = (title: string): void => {
     setActiveForm(title);
@@ -15,6 +21,7 @@ export const Main = () => {
   };
 
   const handleCloseModal = (): void => {
+    setActiveForm(undefined);
     setIsOpen(false);
   };
 
@@ -34,9 +41,14 @@ export const Main = () => {
           React Hook Form
         </button>
       </div>
+      <div className="flex flex-wrap gap-3 mt-6">
+        {forms && forms.map((item, id) => <UserCard user={item} key={id} />)}
+      </div>
       {isOpen && (
         <Modal onClose={handleCloseModal}>
-          {activeForm === UNCONTROL_FORM && <UncontrolledForm />}
+          {activeForm === UNCONTROL_FORM && (
+            <UncontrolledForm handleCloseModal={handleCloseModal} />
+          )}
           {activeForm === REACT_HOOK_FORM && <ReactHookForm />}
         </Modal>
       )}
