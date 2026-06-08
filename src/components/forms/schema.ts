@@ -50,7 +50,7 @@ export const schema = yup.object({
       }
     ),
 
-  file: yup.string(),
+  // file: yup.string(),
 
   password: yup
     .string()
@@ -70,7 +70,8 @@ export const schema = yup.object({
 
   terms: yup
     .boolean()
-    .oneOf([true], 'You must agree to the terms and conditions'),
+    .oneOf([true], 'You must agree to the terms and conditions')
+    .required('Required field'),
 });
 
 export type User = yup.InferType<typeof schema>;

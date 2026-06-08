@@ -12,7 +12,6 @@ import { UserCard } from './UserCard';
 export const Main = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeForm, setActiveForm] = useState<string | undefined>(undefined);
-  console.log(isOpen, activeForm);
   const forms: IUserData[] = useAppSelector(selectForms);
 
   const handleOpenModal = (title: string): void => {
@@ -49,7 +48,9 @@ export const Main = () => {
           {activeForm === UNCONTROL_FORM && (
             <UncontrolledForm handleCloseModal={handleCloseModal} />
           )}
-          {activeForm === REACT_HOOK_FORM && <ReactHookForm />}
+          {activeForm === REACT_HOOK_FORM && (
+            <ReactHookForm handleCloseModal={handleCloseModal} />
+          )}
         </Modal>
       )}
     </div>

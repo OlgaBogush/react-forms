@@ -1,26 +1,24 @@
+import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { COUNTRIES_LIST } from '../../utils/constants';
-import { useForm, useWatch } from 'react-hook-form';
 import { getPasswordSymbols } from '../../utils/getPasswordSymbols';
+import type { HandleCloseModalProps, IUserData } from '../../types/user';
+import { useAppDispatch } from '../../store/hooks';
+import { addUserForm } from '../../store/userSlice';
+import { schema, type User } from './schema';
 
-type Inputs = {
-  name: string;
-  age: string;
-  email: string;
-  gender: string;
-  country: string;
-  password: string;
-  confirmPassword: string;
-  terms: boolean;
-};
-
-export const ReactHookForm = () => {
+export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
+  const dispatch = useAppDispatch();
   const {
     register,
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<Inputs>({
+  } = useForm<User>({
     mode: 'onTouched',
+    context: { countries: COUNTRIES_LIST },
+    resolver: yupResolver(schema),
     defaultValues: {
       gender: 'male',
       country: 'Belarus',
@@ -34,11 +32,28 @@ export const ReactHookForm = () => {
   });
   const counterPasswordSymbols = getPasswordSymbols(passwordValue);
 
+  const onSubmit: SubmitHandler<User> = (data) => {
+    const userData: IUserData = {
+      name: data.name,
+      age: String(data.age),
+      email: data.email,
+      gender: data.gender,
+      country: data.country,
+      // file: data.file,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+      terms: data.terms ?? false,
+    };
+
+    dispatch(addUserForm(userData));
+    handleCloseModal();
+  };
+
   return (
     <form
       className="flex flex-col items-center flex-grow w-full gap-6"
       noValidate
-      onSubmit={handleSubmit(() => {})}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <h1 className="uppercase">React Hook Form</h1>
       <div className="flex flex-col flex-grow w-full pt-4 pl-4 pr-4 bg-gray-100 rounded shadow">
@@ -53,9 +68,7 @@ export const ReactHookForm = () => {
                 type="text"
                 id="name"
                 placeholder="Enter Your Name"
-                {...register('name', {
-                  required: 'Name is required',
-                })}
+                {...register('name')}
               />
               {errors.name && (
                 <p className="text-red-500 text-[12px]">
@@ -75,11 +88,7 @@ export const ReactHookForm = () => {
                 type="number"
                 id="age"
                 placeholder="Enter Your Age"
-                {...register('age', {
-                  required: 'Age is required',
-                  min: { value: 1, message: 'Min age is 1' },
-                  max: { value: 120, message: 'Max age is 120' },
-                })}
+                {...register('age')}
               />
               {errors.age && (
                 <p className="text-red-500 text-[12px]">{errors.age.message}</p>
@@ -97,13 +106,7 @@ export const ReactHookForm = () => {
                 type="email"
                 id="email"
                 placeholder="Enter email"
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: 'Invalid email format',
-                  },
-                })}
+                {...register('email')}
               />
               {errors.email && (
                 <p className="text-red-500 text-[12px]">
@@ -124,9 +127,7 @@ export const ReactHookForm = () => {
                   type="radio"
                   id="male"
                   value="male"
-                  {...register('gender', {
-                    required: 'Please select your gender',
-                  })}
+                  {...register('gender')}
                 />
                 <label htmlFor="male">Male</label>
               </div>
@@ -136,9 +137,7 @@ export const ReactHookForm = () => {
                   type="radio"
                   id="female"
                   value="female"
-                  {...register('gender', {
-                    required: 'Please select your gender',
-                  })}
+                  {...register('gender')}
                 />
                 <label htmlFor="female">Female</label>
               </div>
@@ -149,9 +148,7 @@ export const ReactHookForm = () => {
                   type="radio"
                   id="other"
                   value="other"
-                  {...register('gender', {
-                    required: true,
-                  })}
+                  {...register('gender')}
                 />
                 <label htmlFor="other">Other</label>
               </div>
@@ -165,7 +162,7 @@ export const ReactHookForm = () => {
             <select
               id="id-country"
               className="min-w-64 h-8 px-2 rounded shadow"
-              {...register('country', { required: true })}
+              {...register('country')}
             >
               <option value="" disabled>
                 Select Your Country
@@ -200,13 +197,7 @@ export const ReactHookForm = () => {
                 type="password"
                 id="password"
                 placeholder="Enter Your Password"
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: {
-                    value: 6,
-                    message: 'Password must be at least 6 characters',
-                  },
-                })}
+                {...register('password')}
               />
 
               {errors.password && (
@@ -227,12 +218,7 @@ export const ReactHookForm = () => {
                 type="password"
                 id="confirmPassword"
                 placeholder="Repeat Your Password"
-                {...register('confirmPassword', {
-                  required: 'Please confirm your password',
-
-                  validate: (value) =>
-                    value === passwordValue || 'Passwords do not match',
-                })}
+                {...register('confirmPassword')}
               />
               {errors.confirmPassword && (
                 <p className="w-64 text-red-500 text-[12px]">
@@ -277,7 +263,7 @@ export const ReactHookForm = () => {
               className="cursor-pointer "
               type="checkbox"
               id="terms"
-              {...register('terms', { required: 'You must accept the terms' })}
+              {...register('terms')}
             />
           </div>
           {errors.terms && (
