@@ -3,7 +3,7 @@ import { useState, type ChangeEvent } from 'react';
 
 import type { IUserData } from '../../types/user';
 import { schema, type User } from './schema';
-import { countriesList } from '../../utils/constants';
+import { COUNTRIES_LIST } from '../../utils/constants';
 import { getPasswordSymbols } from '../../utils/getPasswordSymbols';
 
 export const UncontrolledForm = () => {
@@ -18,7 +18,7 @@ export const UncontrolledForm = () => {
       email: formData.get('email') as string,
       gender: formData.get('gender') as string,
       country: formData.get('country') as string,
-      file: formData.get('file') as File,
+      // file: formData.get('file') as File,
       password: formData.get('password') as string,
       confirmPassword: formData.get('confirmPassword') as string,
       terms: formData.has('terms'),
@@ -27,7 +27,7 @@ export const UncontrolledForm = () => {
     try {
       const user: User = await schema.validate(userData, {
         abortEarly: false,
-        context: { countries: countriesList },
+        context: { countries: COUNTRIES_LIST },
       });
       console.log(user);
     } catch (err) {
@@ -170,7 +170,7 @@ export const UncontrolledForm = () => {
               <option value="" disabled>
                 Select Your Country
               </option>
-              {countriesList.map((item) => {
+              {COUNTRIES_LIST.map((item) => {
                 return (
                   <option key={item} value={item}>
                     {item}
@@ -180,7 +180,7 @@ export const UncontrolledForm = () => {
             </select>
           </div>
 
-          <div className="h-12 flex justify-between">
+          {/* <div className="h-12 flex justify-between">
             <label htmlFor="file">Upload File</label>
             <input
               className="w-64 h-8 px-2 rounded shadow"
@@ -188,7 +188,7 @@ export const UncontrolledForm = () => {
               id="file"
               name="file"
             />
-          </div>
+          </div> */}
 
           <div className="flex justify-between">
             <label htmlFor="password">
