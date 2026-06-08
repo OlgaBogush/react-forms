@@ -34,7 +34,7 @@ export const Modal = ({ onClose, children }: ModalProps) => {
       onClick={onClose}
     >
       <div
-        className="fixed bg-gray-100 flex flex-col items-center gap-6 p-6 h-[85vh] w-xl rounded shadow-2xl overflow-hidden"
+        className="fixed bg-gray-100 flex flex-col items-center gap-6 p-6 h-[90vh] w-xl rounded shadow-2xl overflow-hidden"
         onClick={handleStopPropagation}
       >
         <button

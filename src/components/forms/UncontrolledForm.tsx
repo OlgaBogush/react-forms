@@ -1,12 +1,14 @@
 import { ValidationError } from 'yup';
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 
 import type { IUserData } from '../../types/user';
 import { schema, type User } from './schema';
 import { countriesList } from '../../utils/constants';
+import { getPasswordSymbols } from '../../utils/getPasswordSymbols';
 
 export const UncontrolledForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [passwordValue, setPasswordValue] = useState<string>('');
 
   const handleFormAction = async (formData: FormData) => {
     setErrors({});
@@ -43,6 +45,12 @@ export const UncontrolledForm = () => {
     }
   };
 
+  const handlerChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
+    setPasswordValue(e.target.value);
+  };
+
+  const counterPasswordSymbols = getPasswordSymbols(passwordValue);
+
   return (
     <form
       className="flex flex-col items-center flex-grow w-full gap-6"
@@ -52,7 +60,7 @@ export const UncontrolledForm = () => {
       <h1 className="uppercase">Uncontrolled Form</h1>
       <div className="flex flex-col flex-grow w-full pt-4 pl-4 pr-4 bg-gray-100 rounded shadow">
         <div className="flex flex-col gap-3 flex-grow">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between">
             <label htmlFor="name">
               Name<span className="text-red-500 ml-1">*</span>
             </label>
@@ -68,7 +76,8 @@ export const UncontrolledForm = () => {
               <p className="text-red-500 text-[12px]">{errors.name}</p>
             </div>
           </div>
-          <div className="flex justify-between items-center">
+
+          <div className="flex justify-between">
             <label htmlFor="age">
               Age<span className="text-red-500 ml-1">*</span>
             </label>
@@ -87,7 +96,7 @@ export const UncontrolledForm = () => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between">
             <label htmlFor="email">
               Email<span className="text-red-500 ml-1">*</span>
             </label>
@@ -104,7 +113,7 @@ export const UncontrolledForm = () => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="h-12 flex justify-between">
             <p>
               Gender<span className="text-red-500 ml-1">*</span>
             </p>
@@ -147,7 +156,7 @@ export const UncontrolledForm = () => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="h-12 flex justify-between">
             <label htmlFor="id-country">
               Country<span className="text-red-500 ml-1">*</span>
             </label>
@@ -171,7 +180,7 @@ export const UncontrolledForm = () => {
             </select>
           </div>
 
-          <div className="h-12 flex justify-between items-center">
+          <div className="h-12 flex justify-between">
             <label htmlFor="file">Upload File</label>
             <input
               className="w-64 h-8 px-2 rounded shadow"
@@ -181,7 +190,7 @@ export const UncontrolledForm = () => {
             />
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between">
             <label htmlFor="password">
               Password<span className="text-red-500 ml-1">*</span>
             </label>
@@ -193,12 +202,13 @@ export const UncontrolledForm = () => {
                 name="password"
                 placeholder="Enter Your Password"
                 required
+                onChange={handlerChangePassword}
               />
               <p className="w-64 text-red-500 text-[12px]">{errors.password}</p>
             </div>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between">
             <label htmlFor="confirmPassword">
               Confirm Password<span className="text-red-500 ml-1">*</span>
             </label>
@@ -215,6 +225,29 @@ export const UncontrolledForm = () => {
                 {errors.confirmPassword}
               </p>
             </div>
+          </div>
+
+          <div className="flex gap-2 justify-end mt-1 px-1">
+            <div
+              className={`w-3 h-3 rounded-full ${
+                counterPasswordSymbols >= 1 ? 'bg-blue-200' : 'bg-gray-200'
+              }`}
+            />
+            <div
+              className={`w-3 h-3 rounded-full ${
+                counterPasswordSymbols >= 2 ? 'bg-blue-300' : 'bg-gray-200'
+              }`}
+            />
+            <div
+              className={`w-3 h-3 rounded-full ${
+                counterPasswordSymbols >= 3 ? 'bg-blue-400' : 'bg-gray-200'
+              }`}
+            />
+            <div
+              className={`w-3 h-3 rounded-full ${
+                counterPasswordSymbols >= 4 ? 'bg-blue-500' : 'bg-gray-200'
+              }`}
+            />
           </div>
         </div>
 
