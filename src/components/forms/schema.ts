@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 const regExpName = new RegExp(/^[A-ZА-ЯЁ][a-zа-яё]*$/);
 
-export const schema = yup.object({
+const baseFields = {
   name: yup
     .string()
     .trim()
@@ -50,8 +50,6 @@ export const schema = yup.object({
       }
     ),
 
-  // file: yup.string(),
-
   password: yup
     .string()
     .required('Required field')
@@ -72,6 +70,37 @@ export const schema = yup.object({
     .boolean()
     .oneOf([true], 'You must agree to the terms and conditions')
     .required('Required field'),
+};
+
+export const uncontrolledSchema = yup.object({
+  ...baseFields,
+  file: yup
+    .mixed<File>()
+    .test('fileType', 'correct format JPEG, PNG', (value) => {
+      if (!value || !(value instanceof File) || value.size === 0) return true;
+      return ['image/jpeg', 'image/png'].includes(value.type);
+    })
+    .test('fileSize', 'max 2MB', (value) => {
+      if (!value || !(value instanceof File) || value.size === 0) return true;
+      return value.size <= 2 * 1024 * 1024;
+    }),
 });
 
-export type User = yup.InferType<typeof schema>;
+export const controlledSchema = yup.object({
+  ...baseFields,
+  file: yup
+    .mixed<FileList>()
+    .defined()
+    .test('fileType', 'correct format JPEG, PNG', (value) => {
+      if (!value || value.length === 0) return true;
+      const file = value[0];
+      return ['image/jpeg', 'image/png'].includes(file.type);
+    })
+    .test('fileSize', 'max 2MB', (value) => {
+      if (!value || value.length === 0) return true;
+      const file = value[0];
+      return file.size <= 2 * 1024 * 1024;
+    }),
+});
+
+export type ControlledSchemaType = yup.InferType<typeof controlledSchema>;

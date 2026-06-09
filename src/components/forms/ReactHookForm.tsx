@@ -6,22 +6,25 @@ import { getPasswordSymbols } from '../../utils/getPasswordSymbols';
 import type { HandleCloseModalProps, IUserData } from '../../types/user';
 import { useAppDispatch } from '../../store/hooks';
 import { addUserForm } from '../../store/userSlice';
-import { schema, type User } from './schema';
+import { controlledSchema, type ControlledSchemaType } from './schema';
+import { fileToBase64 } from '../../utils/fileToBase64';
 
 export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
   const dispatch = useAppDispatch();
+
   const {
     register,
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<User>({
+  } = useForm<ControlledSchemaType>({
     mode: 'onTouched',
     context: { countries: COUNTRIES_LIST },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(controlledSchema),
     defaultValues: {
       gender: 'male',
       country: 'Belarus',
+      file: undefined,
     },
   });
 
@@ -32,14 +35,21 @@ export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
   });
   const counterPasswordSymbols = getPasswordSymbols(passwordValue);
 
-  const onSubmit: SubmitHandler<User> = (data) => {
+  const onSubmit: SubmitHandler<ControlledSchemaType> = async (data) => {
+    let fileBase64 = '';
+
+    if (data.file && data.file instanceof FileList && data.file.length > 0) {
+      const fileObject = data.file[0];
+      fileBase64 = await fileToBase64(fileObject);
+    }
+
     const userData: IUserData = {
       name: data.name,
       age: String(data.age),
       email: data.email,
       gender: data.gender,
       country: data.country,
-      // file: data.file,
+      file: fileBase64,
       password: data.password,
       confirmPassword: data.confirmPassword,
       terms: data.terms ?? false,
@@ -177,15 +187,20 @@ export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
             </select>
           </div>
 
-          {/* <div className="h-12 flex justify-between">
+          <div className="h-12 flex justify-between">
             <label htmlFor="file">Upload File</label>
             <input
               className="w-64 h-8 px-2 rounded shadow"
               type="file"
               id="file"
-              name="file"
+              {...register('file')}
             />
-          </div> */}
+            {errors.file && (
+              <p className="w-64 text-red-500 text-[12px]">
+                {errors.file.message}
+              </p>
+            )}
+          </div>
 
           <div className="flex justify-between">
             <label htmlFor="password">

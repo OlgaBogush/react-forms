@@ -3,10 +3,11 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useAppDispatch } from '../../store/hooks';
 
 import type { HandleCloseModalProps, IUserData } from '../../types/user';
-import { schema } from './schema';
+import { uncontrolledSchema } from './schema';
 import { COUNTRIES_LIST } from '../../utils/constants';
 import { getPasswordSymbols } from '../../utils/getPasswordSymbols';
 import { addUserForm } from '../../store/userSlice';
+import { fileToBase64 } from '../../utils/fileToBase64';
 
 export const UncontrolledForm = ({
   handleCloseModal,
@@ -16,23 +17,33 @@ export const UncontrolledForm = ({
   const dispatch = useAppDispatch();
 
   const handleFormAction = async (data: FormData) => {
+    const fileObject = data.get('file') as File;
+    let fileBase64 = '';
+
+    if (fileObject && fileObject.size > 0) {
+      fileBase64 = await fileToBase64(fileObject);
+    }
+
     const userData: IUserData = {
       name: data.get('name') as string,
       age: data.get('age') as string,
       email: data.get('email') as string,
       gender: data.get('gender') as string,
       country: data.get('country') as string,
-      // file: data.get('file') as File,
+      file: fileBase64,
       password: data.get('password') as string,
       confirmPassword: data.get('confirmPassword') as string,
       terms: data.has('terms'),
     };
 
     try {
-      await schema.validate(userData, {
-        abortEarly: false,
-        context: { countries: COUNTRIES_LIST },
-      });
+      await uncontrolledSchema.validate(
+        { ...userData, file: fileObject },
+        {
+          abortEarly: false,
+          context: { countries: COUNTRIES_LIST },
+        }
+      );
       dispatch(addUserForm(userData));
 
       handleCloseModal();
@@ -192,15 +203,18 @@ export const UncontrolledForm = ({
             </select>
           </div>
 
-          {/* <div className="h-12 flex justify-between">
+          <div className=" flex justify-between">
             <label htmlFor="file">Upload File</label>
-            <input
-              className="w-64 h-8 px-2 rounded shadow"
-              type="file"
-              id="file"
-              name="file"
-            />
-          </div> */}
+            <div className="h-12">
+              <input
+                className="w-64 h-8 px-2 rounded shadow"
+                type="file"
+                id="file"
+                name="file"
+              />
+              <p className="w-64 text-red-500 text-[12px]">{errors.file}</p>
+            </div>
+          </div>
 
           <div className="flex justify-between">
             <label htmlFor="password">

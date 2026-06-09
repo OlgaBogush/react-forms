@@ -4,7 +4,7 @@ export interface IUserData {
   email: string;
   gender: string;
   country: string;
-  // file: File;
+  file: string;
   password: string;
   confirmPassword: string;
   terms: boolean;
