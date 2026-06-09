@@ -41,7 +41,15 @@ export const Main = () => {
         </button>
       </div>
       <div className="flex flex-wrap gap-3 mt-6">
-        {forms && forms.map((item, id) => <UserCard user={item} key={id} />)}
+        {forms &&
+          forms.map((item, index) => (
+            <div
+              className={`${forms.length - 1 === index ? ' border border-green-300 rounded shadow-lg shadow-green-300/50' : ''}`}
+              key={index}
+            >
+              <UserCard user={item} />
+            </div>
+          ))}
       </div>
       {isOpen && (
         <Modal onClose={handleCloseModal}>
