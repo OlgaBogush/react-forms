@@ -169,22 +169,29 @@ export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
             <label htmlFor="id-country">
               Country<span className="text-red-500 ml-1">*</span>
             </label>
-            <select
-              id="id-country"
-              className="min-w-64 h-8 px-2 rounded shadow"
-              {...register('country')}
-            >
-              <option value="" disabled>
-                Select Your Country
-              </option>
-              {COUNTRIES_LIST.map((item) => {
-                return (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                );
-              })}
-            </select>
+            <div>
+              <input
+                className="min-w-64 h-8 px-2 rounded shadow"
+                id="id-country"
+                type="text"
+                list="country-options"
+                {...register('country')}
+                defaultValue="Belarus"
+                placeholder="Select Your Country"
+                required
+              />
+              {errors.country && (
+                <p className="text-red-500 text-[12px]">
+                  {errors.country.message}
+                </p>
+              )}
+
+              <datalist id="country-options">
+                {COUNTRIES_LIST.map((item) => {
+                  return <option key={item} value={item} />;
+                })}
+              </datalist>
+            </div>
           </div>
 
           <div className="h-12 flex justify-between">

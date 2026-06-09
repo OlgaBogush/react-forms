@@ -15,16 +15,16 @@ export const UserCard = ({ user }: UserCardProps) => {
           <span className="text-xl">{name.slice(0, 1)}</span>
         )}
       </div>
-      <div className="flex flex-col p-1 bg-white rounded shadow">
-        <p className="text-sm">
+      <div className="h-16 flex flex-col justify-center p-1 bg-white rounded shadow">
+        <p className="text-xs">
           <span className="text-xs text-gray-700 italic mr-1">name:</span>
           {name}
         </p>
-        <p className="text-sm">
+        <p className="text-xs">
           <span className="text-xs text-gray-700 italic mr-1">age:</span>
           {age}
         </p>
-        <p className="text-sm">
+        <p className="text-xs">
           <span className="text-xs text-gray-700 italic mr-1">email:</span>
           {email}
         </p>

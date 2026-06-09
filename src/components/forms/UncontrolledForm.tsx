@@ -183,24 +183,24 @@ export const UncontrolledForm = ({
             <label htmlFor="id-country">
               Country<span className="text-red-500 ml-1">*</span>
             </label>
-            <select
-              name="country"
-              id="id-country"
-              defaultValue="Belarus"
-              className="min-w-64 h-8 px-2 rounded shadow"
-              required
-            >
-              <option value="" disabled>
-                Select Your Country
-              </option>
-              {COUNTRIES_LIST.map((item) => {
-                return (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                );
-              })}
-            </select>
+            <div>
+              <input
+                id="id-country"
+                type="text"
+                name="country"
+                list="country-options"
+                defaultValue="Belarus"
+                className="min-w-64 h-8 px-2 rounded shadow"
+                placeholder="Select Your Country"
+                required
+              />
+              <p className="text-red-500 text-[12px]">{errors.country}</p>
+              <datalist id="country-options">
+                {COUNTRIES_LIST.map((item) => {
+                  return <option key={item} value={item} />;
+                })}
+              </datalist>
+            </div>
           </div>
 
           <div className=" flex justify-between">
