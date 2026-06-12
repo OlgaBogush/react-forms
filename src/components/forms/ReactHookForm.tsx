@@ -35,24 +35,34 @@ export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
   });
   const counterPasswordSymbols = getPasswordSymbols(passwordValue);
 
-  const onSubmit: SubmitHandler<ControlledSchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<ControlledSchemaType> = async ({
+    file,
+    name,
+    age,
+    email,
+    gender,
+    country,
+    password,
+    confirmPassword,
+    terms,
+  }) => {
     let fileBase64 = '';
 
-    if (data.file && data.file instanceof FileList && data.file.length > 0) {
-      const fileObject = data.file[0];
+    if (file && file instanceof FileList && file.length > 0) {
+      const fileObject = file[0];
       fileBase64 = await fileToBase64(fileObject);
     }
 
     const userData: IUserData = {
-      name: data.name,
-      age: String(data.age),
-      email: data.email,
-      gender: data.gender,
-      country: data.country,
+      name,
+      age: String(age),
+      email,
+      gender,
+      country,
       file: fileBase64,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-      terms: data.terms ?? false,
+      password,
+      confirmPassword,
+      terms: terms ?? false,
     };
 
     dispatch(addUserForm(userData));
