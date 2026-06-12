@@ -81,4 +81,19 @@ describe('ReactHookForm', () => {
 
     expect(mockHandleCloseModal).toHaveBeenCalledTimes(1);
   });
+
+  test('errors', async () => {
+    const user = userEvent.setup();
+    render(<ReactHookForm handleCloseModal={mockHandleCloseModal} />);
+
+    await user.type(screen.getByLabelText(/Email/i), 'polgmailcom');
+    await user.type(screen.getByLabelText(/^Password/i), '1234');
+
+    await user.click(screen.getByLabelText(/Name/i));
+
+    expect(
+      await screen.findByText('Incorrect Email Address')
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled();
+  });
 });
