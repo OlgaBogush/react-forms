@@ -17,7 +17,9 @@ export const UncontrolledForm = ({
   const dispatch = useAppDispatch();
 
   const handleFormAction = async (data: FormData) => {
-    const fileObject = data.get('file') as File;
+    const fileInput = document.getElementById('file') as HTMLInputElement;
+    const fileObject = fileInput?.files?.[0] || null;
+
     let fileBase64 = '';
 
     if (fileObject && fileObject.size > 0) {
