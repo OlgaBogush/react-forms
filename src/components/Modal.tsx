@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
+import { useEscapeKey } from '../utils/useEscapeKey';
 
 interface ModalProps {
   onClose: () => void;
@@ -11,18 +12,7 @@ export const Modal = ({ onClose, children }: ModalProps) => {
     'portal-modal-root'
   ) as HTMLElement;
 
-  useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-        return;
-      }
-    };
-
-    window.addEventListener('keydown', handleEscapeKey);
-
-    return () => window.removeEventListener('keydown', handleEscapeKey);
-  }, [onClose]);
+  useEscapeKey(onClose);
 
   const handleStopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
