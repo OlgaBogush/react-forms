@@ -8,6 +8,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { addUserForm } from '../../store/userSlice';
 import { controlledSchema, type ControlledSchemaType } from './schema';
 import { fileToBase64 } from '../../utils/fileToBase64';
+import { InputField } from './InputField';
 
 export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
   const dispatch = useAppDispatch();
@@ -78,63 +79,29 @@ export const ReactHookForm = ({ handleCloseModal }: HandleCloseModalProps) => {
       <h1 className="uppercase">React Hook Form</h1>
       <div className="flex flex-col flex-grow w-full pt-4 pl-4 pr-4 bg-gray-100 rounded shadow">
         <div className="flex flex-col gap-3 flex-grow">
-          <div className="flex justify-between">
-            <label htmlFor="name">
-              Name<span className="text-red-500 ml-1">*</span>
-            </label>
-            <div className="h-12">
-              <input
-                className="min-w-64 h-8 px-2 rounded shadow"
-                type="text"
-                id="name"
-                placeholder="Enter Your Name"
-                {...register('name')}
-              />
-              {errors.name && (
-                <p className="text-red-500 text-[12px]">
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
-          </div>
+          <InputField
+            id="name"
+            title="Name"
+            type="text"
+            error={errors.name?.message}
+            {...register('name')}
+          />
 
-          <div className="flex justify-between">
-            <label htmlFor="age">
-              Age<span className="text-red-500 ml-1">*</span>
-            </label>
-            <div className="h-12">
-              <input
-                className="min-w-64 h-8 px-2 rounded shadow"
-                type="number"
-                id="age"
-                placeholder="Enter Your Age"
-                {...register('age')}
-              />
-              {errors.age && (
-                <p className="text-red-500 text-[12px]">{errors.age.message}</p>
-              )}
-            </div>
-          </div>
+          <InputField
+            id="age"
+            title="Age"
+            type="number"
+            error={errors.age?.message}
+            {...register('age')}
+          />
 
-          <div className="flex justify-between">
-            <label htmlFor="email">
-              Email<span className="text-red-500 ml-1">*</span>
-            </label>
-            <div className="h-12">
-              <input
-                className="min-w-64 h-8 px-2 rounded shadow"
-                type="email"
-                id="email"
-                placeholder="Enter email"
-                {...register('email')}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-[12px]">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-          </div>
+          <InputField
+            id="email"
+            title="Email"
+            type="email"
+            error={errors.email?.message}
+            {...register('email')}
+          />
 
           <div className="h-12 flex justify-between">
             <p>
